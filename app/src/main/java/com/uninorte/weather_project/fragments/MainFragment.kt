@@ -67,13 +67,13 @@ class MainFragment : Fragment(), WeatherAdapter.onListInteraction {
     }
 
     private fun loadData(obsCW: List<CurrentWeather>){
-        for(randWeather in obsCW){
-            var icon = randWeather.weather.first().icon
+        for(cityWeather in obsCW){
+            var icon = cityWeather.weather.first().icon
 
             var weather = Weather(
-                randWeather.id.toString(),
-                randWeather.name,
-                randWeather.main.temp,
+                cityWeather.id.toString(),
+                cityWeather.name,
+                cityWeather.main.temp,
                 "http://openweathermap.org/img/wn/${icon}@2x.png"
             )
 
@@ -85,7 +85,7 @@ class MainFragment : Fragment(), WeatherAdapter.onListInteraction {
     }
 
     override fun onListCardInteraction(item: Weather?) {
-        val bundle = bundleOf("data" to item, "user" to item)
+        val bundle = bundleOf("data" to item, "weather" to item)
         navController.navigate(R.id.forecastFragment,bundle)
     }
 }

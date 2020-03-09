@@ -9,32 +9,32 @@ import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.uninorte.weather_project.BuildConfig
 import com.uninorte.weather_project.VolleySingleton
-import com.uninorte.weather_project.data.CurrentWeather
+import com.uninorte.weather_project.data.ClimateForecast
 import org.json.JSONObject
 
-class CurrentWeatherDao private constructor(var context: Context) {
+class ClimateForecastDao private constructor(var context: Context) {
 
-    private val currentWeathers = MutableLiveData<List<CurrentWeather>>()
-    private val currentWeatherList = mutableListOf<CurrentWeather>()
+    private val climateForecasts = MutableLiveData<List<ClimateForecast>>()
+    private val climateForecastsList = mutableListOf<ClimateForecast>()
     private var queue: RequestQueue = VolleySingleton.getInstance(context).requestQueue
 
     companion object{
         @Volatile
-        private var INSTANCE: CurrentWeatherDao? = null
+        private var INSTANCE: ClimateForecastDao? = null
         fun getInstance(context: Context) =
             INSTANCE ?: synchronized(this){
-                INSTANCE ?: CurrentWeatherDao(context).also { INSTANCE = it }
+                INSTANCE ?: ClimateForecastDao(context).also { INSTANCE = it }
             }
     }
 
-    fun addCurrentWeather(id: String) {
+    fun addClimateForecast(id: String) {
         VolleySingleton.getInstance(context).addToRequestQueue(getJsonObject(id))
     }
 
-    fun getCurrentWeathers() = currentWeathers
+    fun getClimateForecasts() = climateForecasts
 
     private fun getJsonObject(id: String): JsonObjectRequest {
-        val url = "2222"
+        val url = ""
 
         return JsonObjectRequest(
             Request.Method.GET, url, null,
@@ -48,9 +48,12 @@ class CurrentWeatherDao private constructor(var context: Context) {
     }
 
     private fun parseObjectG(response: JSONObject) {
-        var currentWeather = CurrentWeather.getCurrentWeather(response)
-        currentWeatherList.add(currentWeather)
-        currentWeathers.value = currentWeatherList
+        var list = ClimateForecast.getClimateForecast(response)
+        val size: Int = list.size
+        for (i in 0 until size) {
+            val climateForecast = list[i]
+            climateForecastsList.add(climateForecast)
+        }
+        climateForecasts.value = climateForecastsList
     }
-
 }

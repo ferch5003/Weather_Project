@@ -18,19 +18,19 @@ android {
 
     flavorDimensions "version"
     productFlavors {
-        apiUrl {
-            buildConfigField 'String', 'BASE_URL', '"https://api.openweathermap.org/data/2.5/weather?appid={key}&units=metric"'
+        URL_API {
+            buildConfigField 'String', 'BASE_URL', '"https://api.openweathermap.org/data/2.5/"'
         }
     }
 
     buildTypes {
         debug{
-            buildConfigField 'String', 'BASE_URL', '"https://api.openweathermap.org/data/2.5/weather?appid={key}d&units=metric"'
+            buildConfigField 'String', 'BASE_URL', '"https://api.openweathermap.org/data/2.5/"'
         }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            buildConfigField 'String', 'BASE_URL', '"https://api.openweathermap.org/data/2.5/weather?appid={key}d&units=metric"'
+            buildConfigField 'String', 'BASE_URL', '"https://api.openweathermap.org/data/2.5/"'
         }
     }
 

@@ -9,21 +9,22 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ClimateForecast {
 
     public static Gson g = new Gson();
 
-    public CurrentWeather.Weather weather;
-    public CurrentWeather.Main main;
+    public List<Weather> weather;
+    public Main main;
 
     public static ArrayList<ClimateForecast> getClimateForecast(JSONObject response){
         ArrayList<ClimateForecast> list = new ArrayList<>();
         try {
             JSONArray info = response.getJSONArray("list");
             for(int i = 0; i < info.length(); i++){
-                String weatherList = info.getJSONObject(i).toString();
-                ClimateForecast temp = g.fromJson(weatherList, ClimateForecast.class);
+                String forecast = info.getJSONObject(i).toString();
+                ClimateForecast temp = g.fromJson(forecast, ClimateForecast.class);
                 list.add(temp);
             }
         } catch (JSONException e) {
@@ -33,14 +34,13 @@ public class ClimateForecast {
         return list;
     }
 
-    public static class List {
-        public Temp temp;
-        public int dt;
-        public float humidity;
-        public float pressure;
-        public float wind_speed;
+    public static class Weather {
+        public int id;
+        public String main;
+        public String description;
+        public String icon;
 
-        public List(){}
+        public Weather(){}
 
         @NonNull
         @Override
@@ -49,15 +49,15 @@ public class ClimateForecast {
         }
     }
 
-    public static class Temp {
-        public float average;
-        public float average_max;
-        public float average_min;
-        public float record_max;
-        public float record_min;
-        public float humidity;
+    public static class Main {
+        public double temp;
+        public double feels_like;
+        public double temp_min;
+        public double temp_max;
+        public double pressure;
+        public double humidity;
 
-        public Temp(){}
+        public Main(){}
 
         @NonNull
         @Override

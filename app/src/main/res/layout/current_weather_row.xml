@@ -18,22 +18,23 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardWeather"
-            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
-            card_view:cardCornerRadius="4dp"
+            android:layout_height="180dp"
+            android:orientation="horizontal"
+            card_view:cardCornerRadius="10dp"
+            card_view:cardElevation="3dp"
             card_view:cardUseCompatPadding="true">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="150dp">
+                android:layout_height="180dp">
 
                 <TextView
                     android:id="@+id/city"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="32dp"
-                    android:layout_marginTop="25dp"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="15dp"
                     android:text="@{weather.city}"
                     android:textSize="24sp"
                     android:textStyle="bold"
@@ -41,26 +42,40 @@
                     card_view:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/current_weather"
+                    android:id="@+id/main_weather"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="36dp"
-                    android:layout_marginTop="25dp"
-                    android:text="@{StringUtils.formatTemperature(weather.currentWeather)}"
+                    android:layout_marginStart="26dp"
+                    android:layout_marginTop="16dp"
+                    android:text="@{StringUtils.capitalize(weather.descriptionWeather)}"
                     android:textSize="18sp"
                     card_view:layout_constraintBottom_toBottomOf="parent"
                     card_view:layout_constraintStart_toStartOf="parent"
                     card_view:layout_constraintTop_toBottomOf="@+id/city"
                     card_view:layout_constraintVertical_bias="0.113" />
 
+                <TextView
+                    android:id="@+id/current_weather"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="26dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="16dp"
+                    android:text="@{StringUtils.formatTemperature(weather.currentWeather)}"
+                    android:textSize="18sp"
+                    card_view:layout_constraintBottom_toBottomOf="parent"
+                    card_view:layout_constraintStart_toStartOf="parent"
+                    card_view:layout_constraintTop_toBottomOf="@+id/main_weather" />
+
                 <ImageView
                     android:id="@+id/thumbnail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="24dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="10dp"
                     app:imageResource="@{weather.thumbnail}"
                     app:srcCompat="@mipmap/ic_launcher"
+                    card_view:layout_constraintBottom_toBottomOf="parent"
                     card_view:layout_constraintEnd_toEndOf="parent"
                     card_view:layout_constraintTop_toTopOf="parent" />
 

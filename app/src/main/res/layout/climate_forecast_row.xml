@@ -18,51 +18,66 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardWeather"
-            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
-            card_view:cardCornerRadius="4dp"
-            card_view:cardUseCompatPadding="true">
+            android:layout_height="180dp"
+            android:orientation="horizontal"
+            card_view:cardCornerRadius="10dp"
+            card_view:cardUseCompatPadding="true"
+            card_view:cardElevation="3dp">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="150dp">
+                android:layout_height="180dp">
 
-                <TextView
-                    android:id="@+id/textView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="32dp"
-                    android:layout_marginTop="25dp"
-                    android:text="@{forecast.day}"
-                    android:textSize="24sp"
-                    android:textStyle="bold"
-                    card_view:layout_constraintStart_toStartOf="parent"
-                    card_view:layout_constraintTop_toTopOf="parent" />
+            <TextView
+                android:id="@+id/day_forecast"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="15dp"
+                android:text="@{forecast.day}"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                card_view:layout_constraintStart_toStartOf="parent"
+                card_view:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
-                    android:id="@+id/textView2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="36dp"
-                    android:layout_marginTop="25dp"
-                    android:text="@{StringUtils.formatTemperature(forecast.expectedWeather)}"
-                    android:textSize="18sp"
-                    card_view:layout_constraintBottom_toBottomOf="parent"
-                    card_view:layout_constraintStart_toStartOf="parent"
-                    card_view:layout_constraintTop_toBottomOf="@+id/textView"
-                    card_view:layout_constraintVertical_bias="0.113" />
+            <TextView
+                android:id="@+id/main_forecast"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="26dp"
+                android:layout_marginTop="16dp"
+                android:text="@{StringUtils.capitalize(forecast.descriptionWeather)}"
+                android:textSize="18sp"
+                card_view:layout_constraintBottom_toBottomOf="parent"
+                card_view:layout_constraintStart_toStartOf="parent"
+                card_view:layout_constraintTop_toBottomOf="@+id/day_forecast"
+                card_view:layout_constraintVertical_bias="0.113" />
 
-                <ImageView
-                    android:id="@+id/imageView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="24dp"
-                    app:imageResource="@{forecast.thumbnail}"
-                    app:srcCompat="@mipmap/ic_launcher"
-                    card_view:layout_constraintEnd_toEndOf="parent"
-                    card_view:layout_constraintTop_toTopOf="parent" />
+            <TextView
+                android:id="@+id/thumbnail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="26dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="16dp"
+                android:text="@{StringUtils.formatTemperature(forecast.expectedWeather)}"
+                android:textSize="18sp"
+                card_view:layout_constraintBottom_toBottomOf="parent"
+                card_view:layout_constraintStart_toStartOf="parent"
+                card_view:layout_constraintTop_toBottomOf="@+id/main_forecast" />
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="10dp"
+                app:imageResource="@{forecast.thumbnail}"
+                app:srcCompat="@mipmap/ic_launcher"
+                card_view:layout_constraintBottom_toBottomOf="parent"
+                card_view:layout_constraintEnd_toEndOf="parent"
+                card_view:layout_constraintTop_toTopOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

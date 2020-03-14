@@ -1,5 +1,6 @@
 package com.uninorte.weather_project.adapters
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
@@ -13,17 +14,17 @@ class ForecastAdapter(private val mValues: List<Forecast>)
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): ForecastAdapter.ViewHolder {
-        // val view = LayoutInflater.from(parent.context).inflate(R.layout.row, parent,false)
-        // return ViewHolder(view)
-        var binder: ClimateForecastRowBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.climate_forecast_row, parent, false)
+    ): ViewHolder {
+        val binder: ClimateForecastRowBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.climate_forecast_row, parent, false)
         return ViewHolder(binder)
     }
 
-    override fun getItemCount(): Int = mValues.size!!
+    override fun getItemCount(): Int = mValues.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = mValues[position]
+        holder.mView.cardWeather.setCardBackgroundColor(Color.parseColor(item.color))
+
         holder.mView.forecast = item
         holder.mView.executePendingBindings()
 

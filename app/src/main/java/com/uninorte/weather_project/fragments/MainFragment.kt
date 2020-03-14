@@ -1,17 +1,21 @@
 package com.uninorte.weather_project.fragments
 
+import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
+import android.view.animation.LayoutAnimationController
 import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 
 import com.uninorte.weather_project.R
 import com.uninorte.weather_project.adapters.WeatherAdapter
@@ -25,14 +29,26 @@ import kotlinx.android.synthetic.main.fragment_main.view.*
  */
 class MainFragment : Fragment(), WeatherAdapter.onListInteraction {
 
-    private val weathers = mutableListOf<Weather>()
     private lateinit var viewModel: CurrentWeatherViewModel
-    lateinit var navController: NavController
+    private lateinit var swipeRefreshLayout: SwipeRefreshLayout
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var navController: NavController
+    private val weathers = mutableListOf<Weather>()
     private var adapter: WeatherAdapter? = null
+    private var idCities = mutableListOf<String>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navController = Navigation.findNavController(view)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        idCities = mutableListOf("3688689","3674962","3687925","3689147","3687238",
+            "3667905","3685533","3667849","3688465","3688928")
+
+        viewModel = ViewModelProvider(this).get(CurrentWeatherViewModel::class.java)
     }
 
     override fun onCreateView(
@@ -40,41 +56,74 @@ class MainFragment : Fragment(), WeatherAdapter.onListInteraction {
         savedInstanceState: Bundle?
     ): View? {
 
-        val idCities = mutableListOf("3688689","3674962","3687925","3689147","3687238",
-            "3667905","3685533","3667849","3688465","3688928")
-
         // Inflate the layout for this fragment
         val view =  inflater.inflate(R.layout.fragment_main, container, false)
 
-        viewModel = ViewModelProvider(this).get(CurrentWeatherViewModel::class.java)
+        recyclerView = view.weather_list
 
-        for(id in idCities){
-            viewModel.addCurrentWeather(id)
-        }
+        swipeRefreshLayout = view.swipe_refresh_layout
 
-        viewModel.getCurrentWeathers().observe(viewLifecycleOwner, Observer { obsCW ->
-            run{
-                loadData(obsCW)
-            }
-        })
+        swipeRefreshLayout.isRefreshing = true
 
         adapter = WeatherAdapter(weathers, this)
 
-        view.weather_list.layoutManager = LinearLayoutManager(context)
-        view.weather_list.adapter = adapter
+        swipeRefreshLayout.setOnRefreshListener {
+            viewModel.deleteCurrentWeathers()
+            addCurrentWeather()
+        }
+
+        viewModelAct()
+
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        recyclerView.adapter = adapter
 
         return view
     }
 
+    private fun viewModelAct(){
+        addCurrentWeather()
+
+        viewModel.getCurrentWeathers().removeObserver { obsCW ->
+            run{
+                weathers.clear()
+                loadData(obsCW)
+                if(swipeRefreshLayout.isRefreshing){
+                    swipeRefreshLayout.isRefreshing = false
+                }
+            }
+        }
+
+        viewModel.getCurrentWeathers().observe(viewLifecycleOwner, Observer { obsCW ->
+            run{
+                weathers.clear()
+                loadData(obsCW)
+                if(swipeRefreshLayout.isRefreshing){
+                    swipeRefreshLayout.isRefreshing = false
+                }
+            }
+        })
+    }
+
+    private fun addCurrentWeather(){
+        for(id in idCities){
+            viewModel.addCurrentWeather(id)
+        }
+    }
+
     private fun loadData(obsCW: List<CurrentWeather>){
         for(cityWeather in obsCW){
-            var icon = cityWeather.weather.first().icon
+            val currentWeather = cityWeather.weather.first()
 
-            var weather = Weather(
+            val color = getColorString(currentWeather.main)
+
+            val weather = Weather(
                 cityWeather.id.toString(),
                 cityWeather.name,
                 cityWeather.main.temp,
-                "http://openweathermap.org/img/wn/${icon}@2x.png"
+                currentWeather.main,
+                currentWeather.description,
+                color,
+                "http://openweathermap.org/img/wn/${currentWeather.icon}@2x.png"
             )
 
             if(!weathers.contains(weather)){
@@ -82,6 +131,31 @@ class MainFragment : Fragment(), WeatherAdapter.onListInteraction {
             }
         }
         adapter!!.updateData()
+        animation(recyclerView)
+    }
+
+    private fun animation(recyclerView: RecyclerView){
+        val context: Context = recyclerView.context
+
+        val resId: Int = R.anim.layout_animation_fall_down
+
+        val animation: LayoutAnimationController =
+            AnimationUtils.loadLayoutAnimation(context, resId)
+
+        recyclerView.layoutAnimation = animation
+        recyclerView.scheduleLayoutAnimation()
+    }
+
+    private fun getColorString(main: String): String{
+        return when(main) {
+            "Clear" -> "#fff176"
+            "Clouds", "Mist", "Haze", "Smoke", "Fog" -> "#e0e0e0"
+            "Rain", "Thunderstorm", "Drizzle", "Snow", "Tornado", "Squall"-> "#b3e5fc"
+            "Dust", "Sand", "Ash" -> "#a1887f"
+            else -> { // Note the block
+                "#ffffff"
+            }
+        }
     }
 
     override fun onListCardInteraction(item: Weather?) {

@@ -17,4 +17,8 @@ class CurrentWeatherViewModel(application: Application) : AndroidViewModel(appli
     fun getCurrentWeathers(): MutableLiveData<List<CurrentWeather>> {
         return currentWeatherDao.getCurrentWeathers()
     }
+
+    fun deleteCurrentWeathers(){
+        currentWeatherDao.deleteCurrentWeathers()
+    }
 }

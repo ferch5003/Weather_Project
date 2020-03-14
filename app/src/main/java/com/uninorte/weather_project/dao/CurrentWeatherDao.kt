@@ -28,13 +28,17 @@ class CurrentWeatherDao private constructor(var context: Context) {
     }
 
     fun addCurrentWeather(id: String) {
-        VolleySingleton.getInstance(context).addToRequestQueue(getJsonObject(id))
+        if(currentWeatherList.size < 9) VolleySingleton.getInstance(context).addToRequestQueue(getJsonObject(id))
     }
 
     fun getCurrentWeathers() = currentWeathers
 
+    fun deleteCurrentWeathers(){
+        currentWeatherList.clear()
+    }
+
     private fun getJsonObject(id: String): JsonObjectRequest {
-        val url = "2222"
+        val url = "${BuildConfig.BASE_URL}weather?appid=${BuildConfig.API_KEY}&id=${id}&units=metric"
 
         return JsonObjectRequest(
             Request.Method.GET, url, null,
@@ -48,7 +52,7 @@ class CurrentWeatherDao private constructor(var context: Context) {
     }
 
     private fun parseObjectG(response: JSONObject) {
-        var currentWeather = CurrentWeather.getCurrentWeather(response)
+        val currentWeather = CurrentWeather.getCurrentWeather(response)
         currentWeatherList.add(currentWeather)
         currentWeathers.value = currentWeatherList
     }

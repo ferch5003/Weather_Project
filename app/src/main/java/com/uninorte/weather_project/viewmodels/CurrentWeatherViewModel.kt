@@ -10,8 +10,8 @@ class CurrentWeatherViewModel(application: Application) : AndroidViewModel(appli
 
     private var currentWeatherDao: CurrentWeatherDao = CurrentWeatherDao.getInstance(this.getApplication())
 
-    fun addCurrentWeather(id: String) {
-        currentWeatherDao.addCurrentWeather(id)
+    fun addCurrentWeathers(ids: String) {
+        currentWeatherDao.addCurrentWeathers(ids)
     }
 
     fun getCurrentWeathers(): MutableLiveData<List<CurrentWeather>> {

@@ -34,7 +34,7 @@ class ClimateForecastDao private constructor(var context: Context) {
     fun getClimateForecasts() = climateForecasts
 
     private fun getJsonObject(id: String): JsonObjectRequest {
-        val url = "${BuildConfig.BASE_URL}forecast?appid=${BuildConfig.API_KEY}&id=${id}&units=metric"
+        val url = "${BuildConfig.BASE_URL}forecast?appid=${BuildConfig.API_KEY}&id=${id}&units=metric&lang=es"
 
         climateForecastsList.clear()
 

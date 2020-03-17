@@ -10,7 +10,9 @@ data class Weather (
     val currentWeather: Double,
     val mainWeather: String,
     val descriptionWeather: String,
-    val color: String,
+    val humidity: Int,
+    val dt: Long,
+    val background: Int,
     val thumbnail: String
 ): Parcelable {
 }

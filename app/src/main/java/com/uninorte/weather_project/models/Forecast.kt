@@ -5,11 +5,12 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class Forecast (
-    val day: String,
     val expectedWeather: Double,
     val mainWeather: String,
     val descriptionWeather: String,
-    val color: String,
+    val humidity: Int,
+    val dt: Long,
+    val background: Int,
     val thumbnail: String
 ): Parcelable {
 }

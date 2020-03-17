@@ -88,9 +88,7 @@ class ForecastFragment : Fragment() {
             run{
                 forecasts.clear()
                 loadData(obsCF,recyclerView)
-                if(swipeRefreshLayout.isRefreshing){
-                    swipeRefreshLayout.isRefreshing = false
-                }
+                swipeRefreshLayout.isRefreshing = false
             }
         }
 
@@ -98,29 +96,28 @@ class ForecastFragment : Fragment() {
             run{
                 forecasts.clear()
                 loadData(obsCF,recyclerView)
-                if(swipeRefreshLayout.isRefreshing){
-                    swipeRefreshLayout.isRefreshing = false
-                }
+                swipeRefreshLayout.isRefreshing = false
             }
         })
     }
 
     private fun loadData(obsCF: List<ClimateForecast>,recyclerView: RecyclerView){
-        val chunkedList = obsCF.chunked(8)
+        val chunkList = obsCF.chunked(8)
 
-        for((i,cityForecast) in chunkedList.withIndex()){
+        for(cityForecast in chunkList){
             val dayForecast = cityForecast.first()
 
             val climateForecast = dayForecast.weather.first()
 
-            val color = getColorString(climateForecast.main)
+            val background = getBackgroundResource(climateForecast.main)
 
             val forecast = Forecast(
-                "Day ${i + 1}",
                 dayForecast.main.temp,
                 climateForecast.main,
                 climateForecast.description,
-                color,
+                dayForecast.main.humidity,
+                dayForecast.dt,
+                background,
                 "http://openweathermap.org/img/wn/${climateForecast.icon}@2x.png"
             )
 
@@ -144,14 +141,14 @@ class ForecastFragment : Fragment() {
         recyclerView.scheduleLayoutAnimation()
     }
 
-    private fun getColorString(main: String): String{
+    private fun getBackgroundResource(main: String): Int{
         return when(main) {
-            "Clear" -> "#fff176"
-            "Clouds", "Mist", "Haze", "Smoke", "Fog" -> "#e0e0e0"
-            "Rain", "Thunderstorm", "Drizzle", "Snow", "Tornado", "Squall"-> "#b3e5fc"
-            "Dust", "Sand", "Ash" -> "#a1887f"
-            else -> { // Note the block
-                "#ffffff"
+            "Clear" -> R.drawable.bg1
+            "Rain", "Thunderstorm", "Drizzle", "Snow", "Tornado", "Squall"-> R.drawable.bg2
+            "Dust", "Sand", "Ash" -> R.drawable.bg3
+            "Clouds", "Mist", "Haze", "Smoke", "Fog" -> R.drawable.bg4
+            else -> {
+                R.drawable.bg5
             }
         }
     }

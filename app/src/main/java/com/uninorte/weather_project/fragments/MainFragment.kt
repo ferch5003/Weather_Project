@@ -69,7 +69,7 @@ class MainFragment : Fragment(), WeatherAdapter.onListInteraction {
 
         swipeRefreshLayout.setOnRefreshListener {
             viewModel.deleteCurrentWeathers()
-            addCurrentWeather()
+            addCurrentWeathers()
         }
 
         viewModelAct()
@@ -81,15 +81,13 @@ class MainFragment : Fragment(), WeatherAdapter.onListInteraction {
     }
 
     private fun viewModelAct(){
-        addCurrentWeather()
+        addCurrentWeathers()
 
         viewModel.getCurrentWeathers().removeObserver { obsCW ->
             run{
                 weathers.clear()
                 loadData(obsCW)
-                if(swipeRefreshLayout.isRefreshing){
-                    swipeRefreshLayout.isRefreshing = false
-                }
+                swipeRefreshLayout.isRefreshing = false
             }
         }
 
@@ -97,24 +95,21 @@ class MainFragment : Fragment(), WeatherAdapter.onListInteraction {
             run{
                 weathers.clear()
                 loadData(obsCW)
-                if(swipeRefreshLayout.isRefreshing){
-                    swipeRefreshLayout.isRefreshing = false
-                }
+                swipeRefreshLayout.isRefreshing = false
             }
         })
     }
 
-    private fun addCurrentWeather(){
-        for(id in idCities){
-            viewModel.addCurrentWeather(id)
-        }
+    private fun addCurrentWeathers(){
+        val ids = idCities.joinToString(separator = ",")
+        viewModel.addCurrentWeathers(ids)
     }
 
     private fun loadData(obsCW: List<CurrentWeather>){
         for(cityWeather in obsCW){
             val currentWeather = cityWeather.weather.first()
 
-            val color = getColorString(currentWeather.main)
+            val background = getBackgroundResource(currentWeather.main)
 
             val weather = Weather(
                 cityWeather.id.toString(),
@@ -122,7 +117,9 @@ class MainFragment : Fragment(), WeatherAdapter.onListInteraction {
                 cityWeather.main.temp,
                 currentWeather.main,
                 currentWeather.description,
-                color,
+                cityWeather.main.humidity,
+                cityWeather.dt,
+                background,
                 "http://openweathermap.org/img/wn/${currentWeather.icon}@2x.png"
             )
 
@@ -146,14 +143,14 @@ class MainFragment : Fragment(), WeatherAdapter.onListInteraction {
         recyclerView.scheduleLayoutAnimation()
     }
 
-    private fun getColorString(main: String): String{
+    private fun getBackgroundResource(main: String): Int{
         return when(main) {
-            "Clear" -> "#fff176"
-            "Clouds", "Mist", "Haze", "Smoke", "Fog" -> "#e0e0e0"
-            "Rain", "Thunderstorm", "Drizzle", "Snow", "Tornado", "Squall"-> "#b3e5fc"
-            "Dust", "Sand", "Ash" -> "#a1887f"
-            else -> { // Note the block
-                "#ffffff"
+            "Clear" -> R.drawable.bg1
+            "Rain", "Thunderstorm", "Drizzle", "Snow", "Tornado", "Squall"-> R.drawable.bg2
+            "Dust", "Sand", "Ash" -> R.drawable.bg3
+            "Clouds", "Mist", "Haze", "Smoke", "Fog" -> R.drawable.bg4
+            else -> {
+                R.drawable.bg5
             }
         }
     }

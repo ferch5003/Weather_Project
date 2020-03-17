@@ -27,8 +27,8 @@ class CurrentWeatherDao private constructor(var context: Context) {
             }
     }
 
-    fun addCurrentWeather(id: String) {
-        if(currentWeatherList.size < 9) VolleySingleton.getInstance(context).addToRequestQueue(getJsonObject(id))
+    fun addCurrentWeathers(ids: String) {
+        if(currentWeatherList.size < 9) VolleySingleton.getInstance(context).addToRequestQueue(getJsonObject(ids))
     }
 
     fun getCurrentWeathers() = currentWeathers
@@ -37,8 +37,8 @@ class CurrentWeatherDao private constructor(var context: Context) {
         currentWeatherList.clear()
     }
 
-    private fun getJsonObject(id: String): JsonObjectRequest {
-        val url = "${BuildConfig.BASE_URL}weather?appid=${BuildConfig.API_KEY}&id=${id}&units=metric"
+    private fun getJsonObject(ids: String): JsonObjectRequest {
+        val url = "${BuildConfig.BASE_URL}group?appid=${BuildConfig.API_KEY}&id=${ids}&units=metric&lang=es"
 
         return JsonObjectRequest(
             Request.Method.GET, url, null,
@@ -52,8 +52,12 @@ class CurrentWeatherDao private constructor(var context: Context) {
     }
 
     private fun parseObjectG(response: JSONObject) {
-        val currentWeather = CurrentWeather.getCurrentWeather(response)
-        currentWeatherList.add(currentWeather)
+        val list = CurrentWeather.getCurrentWeather(response)
+        val size: Int = list.size
+        for (i in 0 until size) {
+            val currentWeather = list[i]
+            currentWeatherList.add(currentWeather)
+        }
         currentWeathers.value = currentWeatherList
     }
 

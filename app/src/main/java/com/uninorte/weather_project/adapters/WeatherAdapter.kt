@@ -1,6 +1,5 @@
 package com.uninorte.weather_project.adapters
 
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
@@ -24,7 +23,7 @@ class WeatherAdapter(private val mValues: List<Weather>,
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = mValues[position]
-        holder.mView.cardWeather.setCardBackgroundColor(Color.parseColor(item.color))
+        holder.mView.cardLayout.setBackgroundResource(item.background)
         holder.mView.weather = item
         holder.mView.executePendingBindings()
 

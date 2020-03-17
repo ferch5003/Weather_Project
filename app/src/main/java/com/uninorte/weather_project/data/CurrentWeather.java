@@ -4,8 +4,11 @@ import androidx.annotation.NonNull;
 
 import com.google.gson.Gson;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CurrentWeather {
@@ -16,9 +19,22 @@ public class CurrentWeather {
     public Main main;
     public int id;
     public String name;
+    public long dt;
 
-    public static CurrentWeather getCurrentWeather(JSONObject response){
-        return g.fromJson(response.toString(),CurrentWeather.class);
+    public static ArrayList<CurrentWeather> getCurrentWeather(JSONObject response){
+        ArrayList<CurrentWeather> list = new ArrayList<>();
+        try {
+            JSONArray info = response.getJSONArray("list");
+            for(int i = 0; i < info.length(); i++){
+                String weather = info.getJSONObject(i).toString();
+                CurrentWeather temp = g.fromJson(weather, CurrentWeather.class);
+                list.add(temp);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return list;
     }
 
     public static class Weather {
@@ -41,8 +57,8 @@ public class CurrentWeather {
         public double feels_like;
         public double temp_min;
         public double temp_max;
-        public double pressure;
-        public double humidity;
+        public int pressure;
+        public int humidity;
 
         public Main(){}
 

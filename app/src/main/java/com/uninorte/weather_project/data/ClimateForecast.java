@@ -17,6 +17,7 @@ public class ClimateForecast {
 
     public List<Weather> weather;
     public Main main;
+    public long dt;
 
     public static ArrayList<ClimateForecast> getClimateForecast(JSONObject response){
         ArrayList<ClimateForecast> list = new ArrayList<>();
@@ -54,8 +55,8 @@ public class ClimateForecast {
         public double feels_like;
         public double temp_min;
         public double temp_max;
-        public double pressure;
-        public double humidity;
+        public int pressure;
+        public int humidity;
 
         public Main(){}
 
